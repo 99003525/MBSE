@@ -1,0 +1,84 @@
+#include "stm32f4xx.h"
+
+#define HIGH 	1
+#define BTN_PRESSED HIGH
+
+//#include "stm32f407xx_gpio_driver.h"
+void delay(void){
+	for (uint32_t i=0 ;i<500000 ;i++);
+}
+int main(void)
+{
+	Gpio_Handle_t GPIOled, GPIOBtn;
+
+
+
+	GPIOled.pGpiox = GPIOD;
+	GPIOled.Gpio_PinConfig.Gpio_PinNumber = GPIO_PIN_NUM_12;
+	GPIOled.Gpio_PinConfig.Gpio_PinMode = GPIO_MODE_OUT;
+	GPIOled.Gpio_PinConfig.Gpio_PinSpeed = GPIO_SPEED_HIGH;
+	GPIOled.Gpio_PinConfig.Gpio_PinPuPdControl = GPIO_NO_PUPD;
+	GPIOled.Gpio_PinConfig.Gpio_PinOPtype = GPIO_OP_TYPE_PP;
+
+	Gpio_PeriClockControl( GPIOD, ENABLE);
+	Gpio_Init(&GPIOled);
+
+
+	GPIOBtn.pGpiox = GPIOA;
+	GPIOBtn.Gpio_PinConfig.Gpio_PinNumber = GPIO_PIN_NUM_0;
+	GPIOBtn.Gpio_PinConfig.Gpio_PinMode = GPIO_MODE_INPUT;
+	GPIOBtn.Gpio_PinConfig.Gpio_PinSpeed = GPIO_SPEED_HIGH;
+	GPIOBtn.Gpio_PinConfig.Gpio_PinPuPdControl = GPIO_NO_PUPD;
+	//GPIObtn.Gpio_PinConfig.Gpio_PinOPtype = GPIO_OP_TYPE_PP;
+
+	Gpio_PeriClockControl( GPIOA, ENABLE);
+	Gpio_Init(&GPIOBtn);
+
+
+	while(1)
+	{
+		if(Gpio_ReadFromInputPin(GPIOA,GPIO_PIN_NUM_0) == BTN_PRESSED)
+		{
+			Gpio_ToggleOutputPin(GPIOD, GPIO_PIN_NUM_12);
+			delay();
+		}
+	}
+	return 0;
+}
+
+/******************************************/
+
+
+
+
+/*
+ * 001led_toggle.c
+ *
+ *  Created on: 20-Feb-2021
+ *      Author: Training
+ */
+
+#include "stm32f4xx.h"
+//#include "stm32f407xx_gpio_driver.h"
+void delay(void){
+	for (uint32_t i=0 ;i<500000 ;i++);
+}
+int main(void)
+{
+	Gpio_Handle_t GPIOled;
+	GPIOled.pGpiox = GPIOD;
+	GPIOled.Gpio_PinConfig.Gpio_PinNumber = GPIO_PIN_NUM_12;
+	GPIOled.Gpio_PinConfig.Gpio_PinMode = GPIO_MODE_OUT;
+	GPIOled.Gpio_PinConfig.Gpio_PinSpeed = GPIO_SPEED_HIGH;
+	GPIOled.Gpio_PinConfig.Gpio_PinPuPdControl = GPIO_NO_PUPD;
+	GPIOled.Gpio_PinConfig.Gpio_PinOPtype = GPIO_OP_TYPE_PP;
+
+	Gpio_PeriClockControl( GPIOD, ENABLE);
+	Gpio_Init(&GPIOled);
+	while (1)
+	{
+		Gpio_ToggleOutputPin( GPIOD, GPIO_PIN_NUM_12);
+		delay();
+	}
+	return 0;
+}
